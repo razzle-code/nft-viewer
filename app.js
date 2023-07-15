@@ -10,8 +10,11 @@ async function mintArt() {
         // Get the number of iterations from the input field
         const iterations = document.getElementById('iterations').value;
 
-        // Generate a Dragon Curve sequence and colors for demonstration
-        const dragonCurve = Array(2**iterations - 1).fill().map(() => Math.random() < 0.5);
+        // Generate a Dragon Curve sequence
+        const dragonCurveString = dragonCurve(iterations);
+        const dragonCurve = Array.from(dragonCurveString).map(c => c === 'R');
+
+        // Generate colors for demonstration
         const backgroundColor = Math.floor(Math.random() * 0xFFFFFF);
         const baseColor = Math.floor(Math.random() * 0xFFFFFF);
 
@@ -32,62 +35,20 @@ async function mintArt() {
     }
 }
 
-async function viewArtFromToken() {
-    try {
-        // Get the token ID from the input field
-        const tokenId = document.getElementById('tokenId').value;
-
-        // Display the NFT
-        viewArt(tokenId);
-    } catch (error) {
-        console.error(error);
-        alert('An error occurred while trying to view the art.');
-    }
-}
-
 async function viewArt(tokenId) {
-    const canvas = document.getElementById('canvas');
-    const context = canvas.getContext('2d');
-
-    // Clear the canvas
-    context.clearRect(0, 0, canvas.width, canvas.height);
-
     try {
         // Get the art data from the contract
-        const [dragonCurve, backgroundColor, baseColor] = await contract.getArt(tokenId);
+        const [dragonCurveBool, backgroundColor, baseColor] = await contract.getArt(tokenId);
 
-        // Set the background color
-        context.fillStyle = '#' + backgroundColor.toHexString().slice(2).padStart(6, '0');
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        // Convert the bool[] to a string of "L" and "R"
+        const dragonCurve = dragonCurveBool.map(b => b ? 'R' : 'L').join('');
+
+        // Find the longest sequence of "R" and "L" which gives us the number of iterations
+        const iterations = Math.floor(Math.log2(dragonCurve.length + 1));
 
         // Draw the Dragon Curve
-        context.beginPath();
-        let x = 0;
-        let y = 0;
-        let direction = 0;
-        const scale = Math.min(canvas.width, canvas.height) / Math.sqrt(dragonCurve.length);
-        context.moveTo(x, y);
-        for (const turn of dragonCurve) {
-            direction += turn ? 1 : -1;
-            direction %= 4;
-            switch (direction) {
-                case 0:
-                    x += scale;
-                    break;
-                case 1:
-                    y -= scale;
-                    break;
-                case 2:
-                    x -= scale;
-                    break;
-                case 3:
-                    y += scale;
-                    break;
-            }
-            context.lineTo(x, y);
-        }
-        context.strokeStyle = '#' + baseColor.toHexString().slice(2).padStart(6, '0');
-        context.stroke();
+        drawDragonCurve(iterations, Math.min(window.innerWidth, window.innerHeight));
+
     } catch (error) {
         console.error(error);
         if (error.data && error.data.message) {
@@ -97,9 +58,5 @@ async function viewArt(tokenId) {
         }
     }
 }
-
-
-
-
 
 window.ethereum.enable();

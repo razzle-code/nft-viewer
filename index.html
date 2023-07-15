@@ -1,103 +1,34 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Dragon Curve Fractal</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon Curve NFT</title>
     <style>
-      canvas {
-        width: 20%;
-      }
+        /* Add your CSS styles here */
     </style>
-  </head>
-  <body>
-    <h1>Dragon Curve Fractal</h1>
-    <script>
-      function dragonCurve(n) {
-        let result = "R";
-        for (let i = 0; i < n; i++) {
-          result = result + "R" + result.split("").reverse().map(c => c === "R" ? "L" : "R").join("");
-        }
-        return result;
-      }
+</head>
+<body>
+    <div id="content">
+        <h1>Dragon Curve NFT</h1>
 
-      function drawDragonCurve(n, size) {
-        let instructions = dragonCurve(n);
-        let x = 0,
-          y = 0,
-          direction = 0,
-          directions = [
-            [0, 1],
-            [1, 0],
-            [0, -1],
-            [-1, 0]
-          ];
-        let minX = Infinity,
-          maxX = -Infinity,
-          minY = Infinity,
-          maxY = -Infinity;
+        <div>
+            <label for="iterations">Iterations:</label>
+            <input id="iterations" type="number" min="1" max="10">
+            <button id="mintButton">Mint Art</button>
+        </div>
 
-        for (let i = 0; i < instructions.length; i++) {
-          if (instructions[i] === "R") {
-            direction = (direction + 1) % directions.length;
-          } else {
-            direction = (direction - 1 + directions.length) % directions.length;
-          }
-          x += directions[direction][0];
-          y += directions[direction][1];
-          minX = Math.min(minX, x);
-          maxX = Math.max(maxX, x);
-          minY = Math.min(minY, y);
-          maxY = Math.max(maxY, y);
-        }
+        <div>
+            <label for="tokenId">Token ID:</label>
+            <input id="tokenId" type="text">
+            <button id="viewButton">View Art</button>
+        </div>
 
-        let width = maxX - minX + 1,
-          height = maxY - minY + 1,
-          scale = Math.min(size / width, size / height);
+        <!-- This canvas will be used by the drawDragonCurve function -->
+        <canvas id="canvas" width="500" height="500"></canvas>
+    </div>
 
-        x = -minX * scale + (size - width * scale) / 2;
-        y = -minY * scale + (size - height * scale) / 2;
-        direction = 0;
-
-        let canvas = document.createElement("canvas");
-        canvas.width = size;
-        canvas.height = size;
-        document.body.appendChild(canvas);
-
-        let ctx = canvas.getContext("2d");
-
-        // Set the background color to black
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, size, size);
-
-        // Set the stroke color to a green tone
-        ctx.strokeStyle = "rgb(0,128,0)";
-
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-
-        for (let i = 0; i < instructions.length; i++) {
-          if (instructions[i] === "R") {
-            direction = (direction + 1) % directions.length;
-          } else {
-            direction = (direction - 1 + directions.length) % directions.length;
-          }
-          x += directions[direction][0] * scale;
-          y += directions[direction][1] * scale;
-
-          // Change the stroke color to a different green tone
-          ctx.strokeStyle = `rgb(0, ${Math.floor(128 + Math.random() * 128)},0)`;
-
-          ctx.lineTo(x, y);
-
-          // Stroke the current segment
-          ctx.stroke();
-
-          // Begin a new path for the next segment
-          ctx.beginPath();
-          ctx.moveTo(x,y);
-        }
-      }
-
-      drawDragonCurve(10, 500);
-    </script>
-  </body>
+    <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
 </html>
