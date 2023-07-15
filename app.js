@@ -93,6 +93,9 @@ async function mintArt() {
     const tx = await contract.createArt();
     const receipt = await tx.wait();
 
+    // Log the receipt to the console
+    console.log(receipt);
+
     // Get the token ID from the transaction response
     const tokenId = receipt.events[0].args[0].toString();
 
@@ -101,6 +104,7 @@ async function mintArt() {
 
     alert('Art minted!');
 }
+
 
 async function viewArt(tokenId) {
     const canvas = document.getElementById('canvas');
