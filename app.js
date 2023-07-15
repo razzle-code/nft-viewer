@@ -1,8 +1,16 @@
 const provider = new ethers.providers.Web3Provider(window.ethereum);
-const contractAddress = '0x0C3A310991C6402a41bd61df1905f52D14b27e5e'; // replace with your contract's address
-const contractABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[],"name":"canvasSize","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"createArt","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"uint256","name":"x","type":"uint256"},{"internalType":"uint256","name":"y","type":"uint256"}],"name":"getPixel","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}]; // replace with your contract's ABI
+const signer = provider.getSigner();
+const contractAddress = '0xYourContractAddress'; // replace with your contract's address
+const contractABI = [...]; // replace with your contract's ABI
 
-const contract = new ethers.Contract(contractAddress, contractABI, provider);
+const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+async function mintArt() {
+    const tx = await contract.createArt();
+    await tx.wait();
+
+    alert('Art minted!');
+}
 
 async function viewArt() {
     const tokenId = document.getElementById('tokenId').value;
