@@ -111,7 +111,7 @@ async function viewArt() {
             const color = await contract.getPixel(tokenId, i, j);
             const pixel = document.createElement('div');
             pixel.className = 'pixel';
-            pixel.style.backgroundColor = '#' + color.toString(16).padStart(6, '0');
+            pixel.style.backgroundColor = '#' + color.toHexString().slice(2).padStart(6, '0');
             canvas.appendChild(pixel);
         }
         canvas.appendChild(document.createElement('br'));
