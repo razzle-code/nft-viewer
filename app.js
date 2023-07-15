@@ -5,27 +5,31 @@ const contractABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constru
 
 const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
+// This function generates a dragon curve sequence
+function dragonCurve(iterations) {
+    let dragonCurve = "R";
+    while (iterations > 1) {
+        let dragonCurveReversed = [...dragonCurve].reverse().join('');
+        dragonCurveReversed = dragonCurveReversed.replace(/R/g, "L").replace(/-/g, "R").replace(/L/g, "-");
+        dragonCurve += "R" + dragonCurveReversed;
+        iterations--;
+    }
+    return dragonCurve;
+}
+
 async function mintArt() {
     try {
-        // Get the number of iterations from the input field
         const iterations = document.getElementById('iterations').value;
-
-        // Generate a Dragon Curve sequence
         const dragonCurveString = dragonCurve(iterations);
-        const dragonCurve = Array.from(dragonCurveString).map(c => c === 'R');
-
-        // Generate colors for demonstration
+        const dragonCurveArray = Array.from(dragonCurveString).map(c => c === 'R');
         const backgroundColor = Math.floor(Math.random() * 0xFFFFFF);
         const baseColor = Math.floor(Math.random() * 0xFFFFFF);
 
-        const tx = await contract.createArt(dragonCurve, backgroundColor, baseColor);
+        const tx = await contract.createArt(dragonCurveArray, backgroundColor, baseColor);
         const receipt = await tx.wait();
-
-        // Get the tokenId from the Transfer event
         const transferEvent = receipt.events.find(e => e.event === 'Transfer');
         const tokenId = transferEvent.args.tokenId.toString();
 
-        // Display the newly minted NFT
         viewArt(tokenId);
 
         alert('Art minted!');
@@ -37,16 +41,10 @@ async function mintArt() {
 
 async function viewArt(tokenId) {
     try {
-        // Get the art data from the contract
         const [dragonCurveBool, backgroundColor, baseColor] = await contract.getArt(tokenId);
-
-        // Convert the bool[] to a string of "L" and "R"
         const dragonCurve = dragonCurveBool.map(b => b ? 'R' : 'L').join('');
-
-        // Find the longest sequence of "R" and "L" which gives us the number of iterations
         const iterations = Math.floor(Math.log2(dragonCurve.length + 1));
 
-        // Draw the Dragon Curve
         drawDragonCurve(iterations, Math.min(window.innerWidth, window.innerHeight));
 
     } catch (error) {
@@ -58,6 +56,9 @@ async function viewArt(tokenId) {
         }
     }
 }
+
+window.ethereum.enable();
+
 
 document.getElementById('mintButton').addEventListener('click', mintArt);
 document.getElementById('viewButton').addEventListener('click', () => {
