@@ -32,7 +32,18 @@ async function mintArt() {
     }
 }
 
+async function viewArtFromToken() {
+    try {
+        // Get the token ID from the input field
+        const tokenId = document.getElementById('tokenId').value;
 
+        // Display the NFT
+        viewArt(tokenId);
+    } catch (error) {
+        console.error(error);
+        alert('An error occurred while trying to view the art.');
+    }
+}
 
 async function viewArt(tokenId) {
     const canvas = document.getElementById('canvas');

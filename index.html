@@ -9,12 +9,12 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: #000;
+            background: #fff;
         }
         #canvas {
             position: relative;
-            width: 90vmin;
-            height: 90vmin;
+            width: 50vmin;
+            height: 50vmin;
         }
         .pixel {
             position: absolute;
@@ -28,6 +28,10 @@
     <label for="iterations">Iterations:</label>
     <input type="number" id="iterations" name="iterations" min="1" value="20">
     <button onclick="mintArt()">Mint Art</button>
+    <br>
+    <label for="tokenId">Token ID:</label>
+    <input type="number" id="tokenId" name="tokenId" min="1">
+    <button onclick="viewArtFromToken()">View Art</button>
     <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
     <script src="app.js"></script>
 </body>
