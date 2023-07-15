@@ -91,13 +91,18 @@ const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
 async function mintArt() {
     const tx = await contract.createArt();
-    await tx.wait();
+    const receipt = await tx.wait();
+
+    // Get the token ID from the event logs
+    const tokenId = receipt.events[0].args[2].toString();
+
+    // Display the newly minted NFT
+    viewArt(tokenId);
 
     alert('Art minted!');
 }
 
-async function viewArt() {
-    const tokenId = document.getElementById('tokenId').value;
+async function viewArt(tokenId) {
     const canvas = document.getElementById('canvas');
 
     // Clear the canvas
@@ -105,17 +110,27 @@ async function viewArt() {
         canvas.firstChild.remove();
     }
 
-    // Get the pixel data from the contract and display it on the canvas
-    for (let i = 0; i < 10; i++) {
-        for (let j = 0; j < 10; j++) {
-            const color = await contract.getPixel(tokenId, i, j);
-            const pixel = document.createElement('div');
-            pixel.className = 'pixel';
-            pixel.style.backgroundColor = '#' + color.toHexString().slice(2).padStart(6, '0');
-            canvas.appendChild(pixel);
+    try {
+        // Get the pixel data from the contract and display it on the canvas
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                const color = await contract.getPixel(tokenId, i, j);
+                const pixel = document.createElement('div');
+                pixel.className = 'pixel';
+                pixel.style.backgroundColor = '#' + color.toHexString().slice(2).padStart(6, '0');
+                canvas.appendChild(pixel);
+            }
         }
-        canvas.appendChild(document.createElement('br'));
+    } catch (error) {
+        console.error(error);
+        if (error.data && error.data.message) {
+            alert('Error: ' + error.data.message);
+        } else {
+            alert('An error occurred while trying to view the art.');
+        }
     }
 }
+
+
 
 window.ethereum.enable();
