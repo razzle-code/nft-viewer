@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Art NFT Viewer</title>
+    <title>ArtNFT</title>
     <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #000;
+        }
         #canvas {
-            display: grid;
-            grid-template-columns: repeat(10, 20px);
-            grid-template-rows: repeat(10, 20px);
-            gap: 1px;
+            position: relative;
+            width: 90vmin;
+            height: 90vmin;
         }
         .pixel {
-            width: 20px;
-            height: 20px;
+            position: absolute;
+            width: 1%;
+            height: 1%;
         }
     </style>
 </head>
 <body>
-    <h1>Art NFT Viewer</h1>
+    <canvas id="canvas"></canvas>
     <button onclick="mintArt()">Mint Art</button>
-    <input id="tokenId" type="text" placeholder="Enter token ID">
-    <button onclick="viewArt()">View Art</button>
-    <div id="canvas"></div>
-
     <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
     <script src="app.js"></script>
 </body>
