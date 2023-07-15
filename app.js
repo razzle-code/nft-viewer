@@ -3,7 +3,7 @@ const signer = provider.getSigner();
 const contractAddress = '0x0C3A310991C6402a41bd61df1905f52D14b27e5e';
 const contractABI = [
     {
-        "constant": false,
+        "constant": true,
         "inputs": [],
         "name": "canvasSize",
         "outputs": [
@@ -33,7 +33,7 @@ const contractABI = [
         "type": "function"
     },
     {
-        "constant": false,
+        "constant": true,
         "inputs": [
             {
                 "internalType": "uint256",
@@ -64,7 +64,7 @@ const contractABI = [
         "type": "function"
     },
     {
-        "constant": false,
+        "constant": true,
         "inputs": [
             {
                 "internalType": "uint256",
@@ -85,6 +85,7 @@ const contractABI = [
         "type": "function"
     }
 ];
+
 
 const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
