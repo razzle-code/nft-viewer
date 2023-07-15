@@ -11,13 +11,13 @@ async function mintArt() {
         const iterations = document.getElementById('iterations').value;
 
         // Generate a Dragon Curve sequence
-        const dragonCurve = generateDragonCurve(iterations);
+        const dragonCurveBoolArray = dragonCurve(iterations);
 
         // Generate colors for demonstration
         const backgroundColor = Math.floor(Math.random() * 0xFFFFFF);
         const baseColor = Math.floor(Math.random() * 0xFFFFFF);
 
-        const tx = await contract.createArt(dragonCurve, backgroundColor, baseColor);
+        const tx = await contract.createArt(dragonCurveBoolArray, backgroundColor, baseColor);
         const receipt = await tx.wait();
 
         // Get the tokenId from the Transfer event
@@ -33,6 +33,16 @@ async function mintArt() {
         alert('An error occurred while trying to mint the art.');
     }
 }
+
+function dragonCurve(iterations) {
+    let dragonCurveArray = [true];
+    for (let i = 0; i < iterations; i++) {
+        const rotated = dragonCurveArray.map(c => !c).reverse();
+        dragonCurveArray = dragonCurveArray.concat([true], rotated);
+    }
+    return dragonCurveArray;
+}
+
 
 // ...
 // Rest of your code
