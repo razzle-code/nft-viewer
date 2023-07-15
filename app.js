@@ -106,7 +106,7 @@ function drawDragonCurve(dragonCurve, size) {
   y = -minY * scale + (size - height * scale) / 2;
   direction = 0;
 
-  let canvas = document.createElement("canvas");
+  let canvas = document.getElementById('canvas')
   canvas.width = size;
   canvas.height = size;
 
