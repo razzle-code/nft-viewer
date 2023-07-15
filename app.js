@@ -42,7 +42,7 @@ async function viewArt(tokenId) {
         const [dragonCurve, backgroundColor, baseColor] = await contract.getArt(tokenId);
 
         // Set the background color
-        context.fillStyle = '#' + backgroundColor.toString(16).padStart(6, '0');
+        context.fillStyle = '#' + backgroundColor.toHexString().slice(2).padStart(6, '0');
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         // Draw the Dragon Curve
@@ -67,7 +67,7 @@ async function viewArt(tokenId) {
                     break;
             }
         }
-        context.strokeStyle = '#' + baseColor.toString(16).padStart(6, '0');
+        context.strokeStyle = '#' + baseColor.toHexString().slice(2).padStart(6, '0');
         context.stroke();
     } catch (error) {
         console.error(error);
@@ -78,5 +78,6 @@ async function viewArt(tokenId) {
         }
     }
 }
+
 
 window.ethereum.enable();
