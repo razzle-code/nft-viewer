@@ -93,8 +93,8 @@ async function mintArt() {
     const tx = await contract.createArt();
     const receipt = await tx.wait();
 
-    // Log the receipt to the console
-    console.log(receipt);
+    // Log the tx to the console
+    console.log(tx);
 
     // Get the token ID from the transaction response
     const tokenId = receipt.events[0].args[0].toString();
