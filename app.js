@@ -47,25 +47,28 @@ async function viewArt(tokenId) {
 
         // Draw the Dragon Curve
         context.beginPath();
-        context.moveTo(canvas.width / 2, canvas.height / 2);
+        let x = canvas.width / 2;
+        let y = canvas.height / 2;
         let direction = 0;
+        context.moveTo(x, y);
         for (const turn of dragonCurve) {
             direction += turn ? 1 : -1;
             direction %= 4;
             switch (direction) {
                 case 0:
-                    context.lineTo(context.moveToX, context.moveToY - 1);
+                    y -= 1;
                     break;
                 case 1:
-                    context.lineTo(context.moveToX + 1, context.moveToY);
+                    x += 1;
                     break;
                 case 2:
-                    context.lineTo(context.moveToX, context.moveToY + 1);
+                    y += 1;
                     break;
                 case 3:
-                    context.lineTo(context.moveToX - 1, context.moveToY);
+                    x -= 1;
                     break;
             }
+            context.lineTo(x, y);
         }
         context.strokeStyle = '#' + baseColor.toHexString().slice(2).padStart(6, '0');
         context.stroke();
@@ -78,6 +81,7 @@ async function viewArt(tokenId) {
         }
     }
 }
+
 
 
 window.ethereum.enable();
