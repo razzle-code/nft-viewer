@@ -59,4 +59,10 @@ async function viewArt(tokenId) {
     }
 }
 
+document.getElementById('mintButton').addEventListener('click', mintArt);
+document.getElementById('viewButton').addEventListener('click', () => {
+    const tokenId = document.getElementById('tokenId').value;
+    viewArt(tokenId);
+});
+
 window.ethereum.enable();
