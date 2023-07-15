@@ -142,6 +142,7 @@ function drawDragonCurve(dragonCurve, size) {
     // Begin a new path for the next segment
     ctx.beginPath();
     ctx.moveTo(x,y);
+  }
 }
 
 
