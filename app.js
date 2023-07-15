@@ -62,26 +62,26 @@ async function viewArt(tokenId) {
 
         // Draw the Dragon Curve
         context.beginPath();
-        let x = canvas.width / 2;
-        let y = canvas.height / 2;
+        let x = 0;
+        let y = 0;
         let direction = 0;
-        context.moveTo(x, y);
         const scale = Math.min(canvas.width, canvas.height) / Math.sqrt(dragonCurve.length);
+        context.moveTo(x, y);
         for (const turn of dragonCurve) {
             direction += turn ? 1 : -1;
             direction %= 4;
             switch (direction) {
                 case 0:
-                    y -= scale;
-                    break;
-                case 1:
                     x += scale;
                     break;
+                case 1:
+                    y -= scale;
+                    break;
                 case 2:
-                    y += scale;
+                    x -= scale;
                     break;
                 case 3:
-                    x -= scale;
+                    y += scale;
                     break;
             }
             context.lineTo(x, y);
@@ -97,6 +97,7 @@ async function viewArt(tokenId) {
         }
     }
 }
+
 
 
 
