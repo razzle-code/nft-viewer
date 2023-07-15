@@ -7,9 +7,11 @@ const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
 async function mintArt() {
     try {
+        // Get the number of iterations from the input field
+        const iterations = document.getElementById('iterations').value;
+
         // Generate a Dragon Curve sequence and colors for demonstration
-        // In a real application, you would get these from user input or generate them in a more sophisticated way
-        const dragonCurve = Array(2**7 - 1).fill().map(() => Math.random() < 0.5);
+        const dragonCurve = Array(2**iterations - 1).fill().map(() => Math.random() < 0.5);
         const backgroundColor = Math.floor(Math.random() * 0xFFFFFF);
         const baseColor = Math.floor(Math.random() * 0xFFFFFF);
 
@@ -29,6 +31,8 @@ async function mintArt() {
         alert('An error occurred while trying to mint the art.');
     }
 }
+
+
 
 async function viewArt(tokenId) {
     const canvas = document.getElementById('canvas');

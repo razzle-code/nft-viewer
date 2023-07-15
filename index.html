@@ -9,7 +9,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: #FFFFFF;
+            background: #000;
         }
         #canvas {
             position: relative;
@@ -25,6 +25,8 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <label for="iterations">Iterations:</label>
+    <input type="number" id="iterations" name="iterations" min="1" value="20">
     <button onclick="mintArt()">Mint Art</button>
     <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
     <script src="app.js"></script>
