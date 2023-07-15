@@ -93,8 +93,8 @@ async function mintArt() {
     const tx = await contract.createArt();
     const receipt = await tx.wait();
 
-    // Get the token ID from the event logs
-    const tokenId = receipt.events[0].args[2].toString();
+    // Get the token ID from the transaction response
+    const tokenId = receipt.events[0].args[0].toString();
 
     // Display the newly minted NFT
     viewArt(tokenId);
