@@ -17,13 +17,46 @@ function dragonCurve(iterations) {
     return dragonCurve;
 }
 
-// This is just a placeholder for your actual dragon curve drawing function
+// Function to draw dragon curve
 function drawDragonCurve(iterations, size) {
-    // You would put your code for drawing a dragon curve on a canvas here.
-    // This could involve using the canvas API to draw lines based on the dragon curve sequence
-    // and the provided iterations and size parameters.
-    console.log(`Drawing a dragon curve with ${iterations} iterations and size ${size}`);
+    const dragonCurveString = dragonCurve(iterations);
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Start from the middle of the canvas
+    let x = canvas.width / 2;
+    let y = canvas.height / 2;
+
+    // Initial direction to the right
+    let dirX = 1;
+    let dirY = 0;
+
+    // Start the path
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+
+    for(let i = 0; i < dragonCurveString.length; i++){
+        const turnRight = dragonCurveString[i] === 'R';
+
+        // Calculate the new direction. This is a 90 degree rotation
+        const newDirX = turnRight ? dirY : -dirY;
+        const newDirY = turnRight ? -dirX : dirX;
+        dirX = newDirX;
+        dirY = newDirY;
+
+        // Move in the direction
+        x += dirX * size;
+        y += dirY * size;
+        ctx.lineTo(x, y);
+    }
+
+    // Stroke the path
+    ctx.stroke();
 }
+
 
 async function mintArt() {
     try {
