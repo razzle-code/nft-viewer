@@ -5,72 +5,26 @@ const contractABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constru
 
 const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
-// This function generates a dragon curve sequence
-function dragonCurve(iterations) {
-    let dragonCurve = "R";
-    while (iterations > 1) {
-        let dragonCurveReversed = [...dragonCurve].reverse().join('');
-        dragonCurveReversed = dragonCurveReversed.replace(/R/g, "L").replace(/-/g, "R").replace(/L/g, "-");
-        dragonCurve += "R" + dragonCurveReversed;
-        iterations--;
-    }
-    return dragonCurve;
-}
-
-// Function to draw dragon curve
-function drawDragonCurve(iterations, size) {
-    const dragonCurveString = dragonCurve(iterations);
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    // Clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Start from the middle of the canvas
-    let x = canvas.width / 2;
-    let y = canvas.height / 2;
-
-    // Initial direction to the right
-    let dirX = 1;
-    let dirY = 0;
-
-    // Start the path
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-
-    for(let i = 0; i < dragonCurveString.length; i++){
-        const turnRight = dragonCurveString[i] === 'R';
-
-        // Calculate the new direction. This is a 90 degree rotation
-        const newDirX = turnRight ? dirY : -dirY;
-        const newDirY = turnRight ? -dirX : dirX;
-        dirX = newDirX;
-        dirY = newDirY;
-
-        // Move in the direction
-        x += dirX * size;
-        y += dirY * size;
-        ctx.lineTo(x, y);
-    }
-
-    // Stroke the path
-    ctx.stroke();
-}
-
-
 async function mintArt() {
     try {
+        // Get the number of iterations from the input field
         const iterations = document.getElementById('iterations').value;
-        const dragonCurveString = dragonCurve(iterations);
-        const dragonCurveArray = Array.from(dragonCurveString).map(c => c === 'R');
+
+        // Generate a Dragon Curve sequence
+        const dragonCurve = generateDragonCurve(iterations);
+
+        // Generate colors for demonstration
         const backgroundColor = Math.floor(Math.random() * 0xFFFFFF);
         const baseColor = Math.floor(Math.random() * 0xFFFFFF);
 
-        const tx = await contract.createArt(dragonCurveArray, backgroundColor, baseColor);
+        const tx = await contract.createArt(dragonCurve, backgroundColor, baseColor);
         const receipt = await tx.wait();
+
+        // Get the tokenId from the Transfer event
         const transferEvent = receipt.events.find(e => e.event === 'Transfer');
         const tokenId = transferEvent.args.tokenId.toString();
 
+        // Display the newly minted NFT
         viewArt(tokenId);
 
         alert('Art minted!');
@@ -82,11 +36,11 @@ async function mintArt() {
 
 async function viewArt(tokenId) {
     try {
+        // Get the art data from the contract
         const [dragonCurveBool, backgroundColor, baseColor] = await contract.getArt(tokenId);
-        const dragonCurve = dragonCurveBool.map(b => b ? 'R' : 'L').join('');
-        const iterations = Math.floor(Math.log2(dragonCurve.length + 1));
 
-        drawDragonCurve(iterations, Math.min(window.innerWidth, window.innerHeight));
+        // Draw the Dragon Curve
+        drawDragonCurve(dragonCurveBool, Math.min(window.innerWidth, window.innerHeight));
 
     } catch (error) {
         console.error(error);
@@ -97,6 +51,58 @@ async function viewArt(tokenId) {
         }
     }
 }
+
+function drawDragonCurve(dragonCurveData, size) {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Center the drawing
+    let x = canvas.width / 2;
+    let y = canvas.height / 2;
+
+    // Start by moving right
+    let direction = 0; // 0: right, 1: up, 2: left, 3: down
+
+    // Set the line width and color
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#FF0000'; // Red color
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+
+    // Calculate the length of each step
+    let step = size / Math.pow(2, dragonCurveData.length / 2);
+
+    for (let i = 0; i < dragonCurveData.length; i++) {
+        // Turn right or left
+        if (dragonCurveData[i]) {
+            direction = (direction + 1) % 4;
+        } else {
+            direction = (direction + 3) % 4;
+        }
+
+        // Move in the current direction
+        switch (direction) {
+            case 0:
+                x += step;
+                break;
+            case 1:
+                y -= step;
+                break;
+            case 2:
+                x -= step;
+                break;
+            case 3:
+                y += step;
+                break;
+        }
+
+        ctx.lineTo(x, y);
+    }
+
+    ctx.stroke();
+}
+
 
 document.getElementById('mintButton').addEventListener('click', mintArt);
 document.getElementById('viewButton').addEventListener('click', () => {
