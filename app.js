@@ -69,36 +69,32 @@ async function viewArt(tokenId) {
 }
 
 
-function drawDragonCurve(dragonCurveBoolArray, canvasSize) {
+function drawDragonCurve(sequence, size) {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear the canvas
+    const scalingFactor = size / (2 * sequence.length);
+    let x = size / 2;
+    let y = size / 2;
 
-    // Set the initial state
-    let x = canvasSize / 2;
-    let y = canvasSize / 2;
-    let angle = 0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
 
-    const length = canvasSize / Math.sqrt(dragonCurveBoolArray.length);  // length of each line segment
-
-    // Draw the Dragon Curve
-    for (let i = 0; i < dragonCurveBoolArray.length; i++) {
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-
-        // Make a right turn for true and a left turn for false
-        angle += dragonCurveBoolArray[i] ? Math.PI / 2 : -Math.PI / 2;
-
-        // Calculate the end point
-        x += length * Math.cos(angle);
-        y += length * Math.sin(angle);
-
+    for (const direction of sequence) {
+        switch (direction) {
+            case 'L':
+                x -= scalingFactor;
+                break;
+            case 'R':
+                x += scalingFactor;
+                break;
+        }
         ctx.lineTo(x, y);
-        ctx.stroke();
     }
-}
 
+    ctx.stroke();
+}
 
 document.getElementById('mintButton').addEventListener('click', mintArt);
 document.getElementById('viewButton').addEventListener('click', () => {
