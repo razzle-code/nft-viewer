@@ -52,14 +52,8 @@ async function viewArt(tokenId) {
         // Get the art data from the contract
         const [dragonCurveBool, backgroundColor, baseColor] = await contract.getArt(tokenId);
 
-        // Convert the bool[] to a string of "L" and "R"
-        const dragonCurve = dragonCurveBool.map(b => b ? 'R' : 'L').join('');
-
-        // Find the longest sequence of "R" and "L" which gives us the number of iterations
-        const iterations = Math.floor(Math.log2(dragonCurve.length + 1));
-
-        // Log the dragon curve data
-        console.log('Dragon Curve:', dragonCurveBool);
+        // Convert the bool array from Solidity format to a JavaScript array
+        const dragonCurve = dragonCurveBool.map(b => b);
 
         // Draw the Dragon Curve
         drawDragonCurve(dragonCurve, Math.min(window.innerWidth, window.innerHeight));
@@ -74,58 +68,37 @@ async function viewArt(tokenId) {
     }
 }
 
-function drawDragonCurve(dragonCurve, size) {
+
+function drawDragonCurve(dragonCurveBoolArray, canvasSize) {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-    // Ensure canvas is the correct size
-    canvas.width = size;
-    canvas.height = size;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear the canvas
 
-    // Start from the middle of the canvas
-    let x = canvas.width / 2;
-    let y = canvas.height / 2;
+    // Set the initial state
+    let x = canvasSize / 2;
+    let y = canvasSize / 2;
+    let angle = 0;
 
-    let direction = 0;
-    let step = size / Math.pow(2, dragonCurve.length / 2); // Adjust step size based on dragon curve length
+    const length = canvasSize / Math.sqrt(dragonCurveBoolArray.length);  // length of each line segment
 
-    ctx.beginPath(); // Ensure we start a new path
-    ctx.moveTo(x, y);
-    ctx.strokeStyle = '#FF0000'; // Use a easily visible color
+    // Draw the Dragon Curve
+    for (let i = 0; i < dragonCurveBoolArray.length; i++) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
 
-    for (let i = 0; i < dragonCurve.length; i++) {
-        if (dragonCurve[i] === 'R') {
-            direction = (direction + 90) % 360;
-        } else {
-            direction = (direction - 90) % 360;
-        }
+        // Make a right turn for true and a left turn for false
+        angle += dragonCurveBoolArray[i] ? Math.PI / 2 : -Math.PI / 2;
 
-        // Log values for debugging
-        console.log('x:', x, 'y:', y, 'direction:', direction, 'step:', step);
-
-        switch (direction) {
-            case 0: // up
-                y -= step;
-                break;
-            case 90: // right
-            case -270:
-                x += step;
-                break;
-            case 180: // down
-            case -180:
-                y += step;
-                break;
-            case 270: // left
-            case -90:
-                x -= step;
-                break;
-        }
+        // Calculate the end point
+        x += length * Math.cos(angle);
+        y += length * Math.sin(angle);
 
         ctx.lineTo(x, y);
+        ctx.stroke();
     }
-
-    ctx.stroke(); // Ensure we actually draw the path
 }
+
 
 document.getElementById('mintButton').addEventListener('click', mintArt);
 document.getElementById('viewButton').addEventListener('click', () => {
