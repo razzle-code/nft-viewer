@@ -17,6 +17,14 @@ function dragonCurve(iterations) {
     return dragonCurve;
 }
 
+// This is just a placeholder for your actual dragon curve drawing function
+function drawDragonCurve(iterations, size) {
+    // You would put your code for drawing a dragon curve on a canvas here.
+    // This could involve using the canvas API to draw lines based on the dragon curve sequence
+    // and the provided iterations and size parameters.
+    console.log(`Drawing a dragon curve with ${iterations} iterations and size ${size}`);
+}
+
 async function mintArt() {
     try {
         const iterations = document.getElementById('iterations').value;
@@ -56,9 +64,6 @@ async function viewArt(tokenId) {
         }
     }
 }
-
-window.ethereum.enable();
-
 
 document.getElementById('mintButton').addEventListener('click', mintArt);
 document.getElementById('viewButton').addEventListener('click', () => {
