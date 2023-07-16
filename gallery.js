@@ -9,12 +9,13 @@ async function loadGallery() {
   
   const totalSupply = await contractReadOnly.totalSupply();
   const gallery = document.getElementById('gallery');
-
-  for (let i = 0; i < totalSupply.toNumber(); i++) {
-    const [dragonCurve, backgroundColor, baseColor] = await contractReadOnly.getArt(i);
-    const canvas = await drawDragonCurveSmall(dragonCurve, 100);
+  
+  const artList = await contract.getAllArt();
+  
+  artList.forEach(artData => {
+	const canvas = await drawDragonCurveSmall(artData.dragonCurve, 100);
     gallery.appendChild(canvas);
-  }
+  });
 }
 
 function drawDragonCurveSmall(dragonCurve, size) {
