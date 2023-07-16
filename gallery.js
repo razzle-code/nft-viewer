@@ -55,7 +55,7 @@ function drawDragonCurveSmall(dragonCurve, size) {
   y = -minY * scale + (size - height * scale) / 2;
   direction = 0;
 
-  let canvas = document.getElementById('canvas')
+  let canvas = document.createElement('canvas')
   canvas.width = size;
   canvas.height = size;
 
