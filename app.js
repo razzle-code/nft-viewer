@@ -145,17 +145,6 @@ function drawDragonCurve(dragonCurve, size) {
   }
 }
 
-async function loadGallery() {
-  const totalSupply = await contract.totalSupply();
-  const gallery = document.getElementById('gallery');
-
-  for (let i = 0; i < totalSupply.toNumber(); i++) {
-    const [dragonCurve, backgroundColor, baseColor] = await contract.getArt(i);
-    const canvas = await drawDragonCurveSmall(dragonCurve, 100);
-    gallery.appendChild(canvas);
-  }
-}
-
 
 document.getElementById('mintButton').addEventListener('click', mintArt);
 document.getElementById('viewButton').addEventListener('click', () => {
