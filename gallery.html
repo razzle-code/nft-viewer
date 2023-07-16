@@ -8,6 +8,12 @@
     <script src="gallery.js"></script>
   </head>
   <body>
+	<button id="backButton">Go Back</button>
+	<script>
+		document.getElementById('backButton').onclick = function() {
+			window.history.back();
+		}
+	</script>
     <div id="gallery"></div>
   </body>
 </html>
