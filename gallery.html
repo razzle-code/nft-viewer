@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ArtNFT Gallery</title>
+  <style>
+    canvas {
+      margin: 10px;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <h1>ArtNFT Gallery</h1>
+  <div id="gallery"></div>
+
+  <script src="https://cdn.ethers.io/lib/ethers-5.0.esm.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    window.addEventListener("load", async function() {
+      await connectToMetamask();
+      await loadGallery();
+    });
+  </script>
+</body>
+</html>
