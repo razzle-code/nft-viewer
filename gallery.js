@@ -92,6 +92,7 @@ function drawDragonCurveSmall(dragonCurve, size) {
     ctx.beginPath();
     ctx.moveTo(x,y);
   }
+  return canvas;
 }
 
 window.addEventListener("load", async function() {
