@@ -13,7 +13,7 @@ async function loadGallery() {
   const artList = await contract.getAllArt();
   
   artList.forEach(artData => {
-	const canvas = await drawDragonCurveSmall(artData.dragonCurve, 100);
+	const canvas = drawDragonCurveSmall(artData.dragonCurve, 100);
     gallery.appendChild(canvas);
   });
 }
