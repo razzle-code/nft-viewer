@@ -81,7 +81,7 @@ function drawDragonCurveSmall(dragonCurve, size) {
     y += directions[direction][1] * scale;
 
     // Change the stroke color to a different green tone
-    ctx.strokeStyle = `rgb(0, ${Math.floor(128 + Math.random() * 128)},0)`;
+    ctx.strokeStyle = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
 
     ctx.lineTo(x, y);
 
