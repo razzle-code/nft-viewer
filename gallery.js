@@ -10,7 +10,7 @@ async function loadGallery() {
   const totalSupply = await contractReadOnly.totalSupply();
   const gallery = document.getElementById('gallery');
   
-  const artList = await contract.getAllArt();
+  const artList = await contractReadOnly.getAllArt();
   
   artList.forEach(artData => {
 	const canvas = drawDragonCurveSmall(artData.dragonCurve, 100);
