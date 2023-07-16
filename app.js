@@ -34,10 +34,15 @@ async function mintArt() {
     }
 }
 
-function dragonCurve(iterations) {
+function dragonCurve(iterations, randomness = 0.1) {
     let dragonCurveArray = [true];
     for (let i = 0; i < iterations; i++) {
-        const rotated = dragonCurveArray.map(c => !c).reverse();
+        const rotated = dragonCurveArray.map(c => {
+            if (Math.random() < randomness) {
+                return Math.random() < 0.5;
+            }
+            return !c;
+        }).reverse();
         dragonCurveArray = dragonCurveArray.concat([true], rotated);
     }
     return dragonCurveArray;
